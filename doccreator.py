@@ -13,6 +13,7 @@ import json
 import jsonpath_ng
 import re
 import time
+import datetime
 
 
 class DocCreator:
@@ -130,11 +131,12 @@ def main():
 
         elif args.readfile:
             with open(args.readfile) as f:
-                doc.name(f.read(), args.commondir)
-                for field in args.fields.split(','):
+                doc.name(f.readline(), args.commondir)
+                for field in args.fields.split(';'):
+                    field = field.strip()
                     if field.find('=') >= 0:
                         field,default = field.split('=',2)
-                    doc.set(field,f.read())
+                    doc.set(field,f.readline().strip())
 
         elif args.interactive:
             if os.path.isfile(readline_history_file):
@@ -142,7 +144,8 @@ def main():
 
             atexit.register(save_readline_history)
 
-            for field in args.fields.split(','):
+            for field in args.fields.split(';'):
+                field = field.strip()
                 if field.find('=') >= 0:
                     field,default = field.split('=',2)
                 else:
