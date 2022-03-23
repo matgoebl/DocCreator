@@ -1,0 +1,7 @@
+{
+ "Name": "Foo",
+ "Details": {
+  "Location": "Bar",
+  "Type": "123"
+ }
+}
