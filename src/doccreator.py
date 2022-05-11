@@ -20,7 +20,7 @@ class DocCreator:
     def __init__(self, repo_path, repo_url, template_file):
         self.__repo_path = repo_path
         out = None
-        if not os.path.exists(self.__repo_path) and repo_url:
+        if not os.path.exists(os.path.join(self.__repo_path, ".git")) and repo_url:
             out = cmd(f"git clone {repo_url} {self.__repo_path}")
         else:
             out = cmd(f"git -C {self.__repo_path} checkout main && git -C {self.__repo_path} pull || true")

@@ -1,0 +1,33 @@
+{{- if eq .Values.ingresspath.type "nginx" -}}
+{{- $fullName := include "doccreator.fullname" . -}}
+{{- $svcPort := .Values.service.port -}}
+{{- $ingressPath :=  $fullName  -}}
+{{- if .Values.ingresspath.path -}}
+{{-  $ingressPath =  .Values.ingresspath.path -}}
+{{- end -}}
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $fullName }}
+  labels:
+    {{- include "doccreator.labels" . | nindent 4 }}
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/limit-connections: '{{ .Values.env.WORKERS }}'
+    nginx.ingress.kubernetes.io/x-forwarded-prefix: "/{{ $ingressPath }}"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /{{ $ingressPath }}(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ $fullName }}
+            port:
+              number: {{ $svcPort }}
+{{- if .Values.ingresspath.dnsname }}
+    host: {{ .Values.ingresspath.dnsname }}
+{{- end }}
+{{- end }}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}New{% endblock %}
+
+{% block content %}
+
+{% if results %}
+ <h2>Results</h2>
+ <pre>{{ results }}</pre>
+
+{% else %}
+
+<h2>Please enter your data</h2>
+<form method="GET" action="{{ url_for('index') }}">
+<table>
+ {% for i in fields %}
+  <tr>
+   <th align=left valign=top> {{ i | replace('.',': ')}} </th>
+   <td> <input type=input name='{{i}}' size='60'
+    {% if args[i] is defined %} value='{{ args[i]}}' {% endif %}
+     >
+   </td>
+  </tr>
+ {% endfor %}
+  <tr>
+   <th></th>
+   <td> <input type=submit value='Submit'>
+   </td>
+  </tr>
+</table>
+</form>
+
+{% endif %}
+
+{% endblock content %}

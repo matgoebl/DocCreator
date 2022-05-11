@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+ {% set appname = 'DocCreator' %}
+ <title>{{ appname }} - {% block title %}Base{% endblock title %}</title>
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial;
+  padding: 10px;
+  background: #eeeeee;
+}
+
+h1, h2 {
+  padding: 10px;
+  text-align: center;
+  background: #bbbbbb;
+}
+
+h1 {
+  font-size: 30px;
+}
+
+h2 {
+  font-size: 20px;
+}
+
+.footer {
+  padding: 5px;
+  text-align: center;
+  background: #dddddd;
+  margin-top: 20px;
+  font-size: 10px;
+}
+
+a, a:visited {
+  color: blue;
+}
+
+.results {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.results td, .results th {
+  border: 1px solid black;
+}
+
+.results th {
+  height: 30px;
+  text-align: center;
+  background-color: #444444;
+  color: white;
+}
+
+.results td {
+  padding: 3px;
+  text-align: left;
+}
+
+.results tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+.results tr:nth-child(odd) {
+  background-color: #bbbbbb;
+}
+
+.results tr:hover {
+  background-color: #aaaaaa;
+}
+</style>
+<script src="{{ url_for('static', filename='jquery-3.6.0.min.js') }}"></script>
+</head>
+
+<body>
+
+
+<h1>{{ appname }} - {{ self.title() }}</h1>
+
+{% block content %}
+{% endblock content %}
+
+{% if errormsg %}
+ <h2>Error:</h2>
+ <pre>{{ errormsg }}</pre>
+{% endif %}
+
+
+<div class="footer">
+Build: {% include "build.txt" ignore missing %} <br>
+DocCreator - <a href='https://github.com/matgoebl/DocCreator/'>https://github.com/matgoebl/DocCreator/</a> <br>
+(c) 2022 Copyright: Matthias Goebl (matthias dot goebl at goebl dot net) <br>
+</div>
+</body>
+</html>
