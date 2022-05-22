@@ -58,10 +58,11 @@ ingress:
 
 ingresspath:
 #  type: ""
-  type: "traefik"
-#  type: "nginx"
+#  type: "traefik"
+  type: "nginx"
 #  path: /doccreator/
 #  dnsname: "www.example.com"
+#  basicauthsecret: "basicauth-secret"
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

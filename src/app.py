@@ -15,7 +15,6 @@ import urllib.parse
 import importlib
 from string import Template
 from flask import Flask, request, render_template, make_response, g
-from flask_basicauth import BasicAuth
 from jinja2 import Environment, select_autoescape
 from werkzeug.middleware.proxy_fix import ProxyFix
 
@@ -36,9 +35,6 @@ template     = os.environ.get('TEMPLATE', 'template.json')
 fields       = os.environ.get('FIELDS', '').split(';')
 dryrun = False
 
-auth_user = os.environ.get('BASIC_AUTH_USERNAME')
-auth_pass = os.environ.get('BASIC_AUTH_PASSWORD')
-
 logging.basicConfig(level=logging.WARNING-10*verbose,handlers=[logging.StreamHandler()],format="[%(levelname)s] %(message)s")
 
 Flask.jinja_options = {
@@ -49,12 +45,6 @@ Flask.jinja_options = {
     'line_statement_prefix': '%'
 }
 app = Flask(__name__)
-
-if auth_user and auth_pass:
-    app.config['BASIC_AUTH_USERNAME'] = auth_user
-    app.config['BASIC_AUTH_PASSWORD'] = auth_pass
-    app.config['BASIC_AUTH_FORCE'] = True
-    basic_auth = BasicAuth(app)
 
 
 @app.route("/",methods = ['GET', 'POST'])

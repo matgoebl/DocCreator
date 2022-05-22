@@ -16,10 +16,11 @@ metadata:
     kubernetes.io/ingress.class: "traefik"
     traefik.ingress.kubernetes.io/router.middlewares: >
       {{ .Release.Namespace }}-{{ $fullName }}-stripprefix@kubernetescrd
-      {{- if .Values.basicAuthUsers }}
+      {{- if .Values.ingresspath.basicauthsecret }}
       ,{{ .Release.Namespace }}-{{ $fullName }}-auth@kubernetescrd
       {{- end }}
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    kubernetes.io/ingress.class: traefik
 spec:
   rules:
   - http:
@@ -46,6 +47,7 @@ spec:
   stripPrefix:
     prefixes:
       - /{{ $ingressPath }}/
+{{- if .Values.ingresspath.basicauthsecret }}
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
@@ -56,20 +58,7 @@ spec:
     removeHeader: true
     realm: Accessing {{ $ingressPath }}
     headerField: X-Auth-User
-    secret: {{ $fullName }}-authsecret
----
-{{- if .Values.basicAuthUsers }}
-apiVersion: v1
-kind: Secret
-metadata:
-  name: {{ $fullName }}-authsecret
-data:
-  users: |
-    {{- range $user, $password := .Values.basicAuthUsers }}
-    {{-  $line := htpasswd $user $password }}
-    {{   print $line "\n" | b64enc | indent 4 }}
-    {{- end }}
-# htpasswd -nb user password | openssl base64
+    secret: {{ .Values.ingresspath.basicauthsecret}}
 {{- end }}
 
 {{- end }}
