@@ -11,7 +11,7 @@ VENV=.venv
 export BUILDTAG:=$(shell date +%Y%m%d.%H%M%S)
 
 HELM_OPTS:=--set image.repository=$(DOCKER_REGISTRY)/$(IMAGE) --set image.tag=$(BUILDTAG) --set ingresspath.dnsname=$(DNSNAME) --set ingresspath.basicauthsecret=basicauth-$(IMAGE) --set image.pullPolicy=Always
-APP_URL:=$(shell echo "$(KUBEURL)/$(NAME)/" | sed -e "s|://|://$(WEBUSER):$(WEBPASS)@|")
+APP_URL:=$(shell echo "https://$(DNSNAME)/$(NAME)/" | sed -e "s|://|://$(WEBUSER):$(WEBPASS)@|")
 
 all: install wait ping
 
@@ -54,11 +54,11 @@ imagerun: $(VENV)/.stamp
 	docker run -it -p 8008:5000 $(IMAGE)
 
 install-dry:
-	helm install --dry-run --debug $(HELM_OPTS) --namespace=$(NAMESPACE) $(NAME) ./$(IMAGE)-helm
+	helm install --dry-run --debug $(HELM_OPTS) --namespace=$(NAMESPACE) $(NAME) ./doccreator-helm
 
 install: image ssh-secret basicauth_secret_update
-	helm lint ./$(IMAGE)-helm
-	helm upgrade --install $(HELM_OPTS) --namespace=$(NAMESPACE) $(NAME) ./$(IMAGE)-helm
+	helm lint ./doccreator-helm
+	helm upgrade --install $(HELM_OPTS) --namespace=$(NAMESPACE) $(NAME) ./doccreator-helm
 
 basicauth_secret_update:
 	$(WEBPASS_CMD) | htpasswd -i -n "$(WEBUSER)" | kubectl --namespace=$(NAMESPACE) create secret generic basicauth-$(IMAGE) --from-file=auth=/dev/stdin --dry-run=client --output=yaml --save-config | kubectl apply -f -
@@ -75,6 +75,7 @@ wait:
 uninstall:
 	-helm uninstall --namespace=$(NAMESPACE) $(NAME)
 	-kubectl --namespace=$(NAMESPACE) delete secret basicauth-$(IMAGE)
+	-kubectl --namespace=$(NAMESPACE) delete secret $(NAME)-ssh-key
 
 ping:
 	curl -si "$(APP_URL)"

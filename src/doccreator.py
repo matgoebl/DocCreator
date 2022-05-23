@@ -40,7 +40,7 @@ class DocCreator:
     def get(self, field, default=None):
         jsonpath_expr = jsonpath_ng.parse(field)
         result = ",".join([str(match.value) for match in jsonpath_expr.find(self.__doc) if match.value != None])
-        if not result:
+        if result == None:
             return default
         return result
 
