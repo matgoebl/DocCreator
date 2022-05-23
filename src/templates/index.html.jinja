@@ -14,10 +14,9 @@
 <table>
  {% for i in fields %}
   <tr>
-   <th align=left valign=top> {{ i | replace('.',': ')}} </th>
-   <td> <input type=input name='{{i}}' size='60'
-    {% if args[i] is defined %} value='{{ args[i]}}' {% endif %}
-     >
+   <th align=left valign=top> {{ i.split('=')[0] | replace('.',': ')}} </th>
+   <td> <input type=input name='{{ i.split('=')[0] }}' size='60'
+    value='{% if args[i] is defined %}{{ args[i] }}{% else %}{{ i.split('=')[1] }}{% endif %}' >
    </td>
   </tr>
  {% endfor %}

@@ -31,6 +31,7 @@ gitrepopath  = os.environ.get('GITREPOPATH', '.')
 gitrepourl   = os.environ.get('GITREPOURL', None)
 commondir    = os.environ.get('COMMONDIR', None)
 branchprefix = os.environ.get('BRANCHPREFIX', 'doccreator')
+nameprefix   = os.environ.get('NAMEPREFIX', '')
 template     = os.environ.get('TEMPLATE', 'template.json')
 fields       = os.environ.get('FIELDS', '').split(';')
 dryrun = False
@@ -61,7 +62,9 @@ def index():
         name = args.get('Name')
         if name and len(name) > 0:
 
-            doc = doccreator.DocCreator(os.path.join(gitrepopath,"worker-"+str(os.getpid())), gitrepourl, template)
+            doc = doccreator.DocCreator(os.path.join(gitrepopath,"worker-"+str(os.getpid())), gitrepourl, template, nameprefix)
+            if verbose:
+                print(f"Output:\n{doc.out}")
             if verbose >= 2:
                 print(f"Source document:\n{doc}")
 

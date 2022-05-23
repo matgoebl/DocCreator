@@ -37,9 +37,12 @@ class DocCreator:
         jsonpath_expr = jsonpath_ng.parse(field)
         self.__doc = jsonpath_expr.update(self.__doc, value)
 
-    def get(self, field):
+    def get(self, field, default=None):
         jsonpath_expr = jsonpath_ng.parse(field)
-        return ",".join([str(match.value) for match in jsonpath_expr.find(self.__doc) if match.value != None])
+        result = ",".join([str(match.value) for match in jsonpath_expr.find(self.__doc) if match.value != None])
+        if not result:
+            return default
+        return result
 
     def name(self, newname, commondir=None):
         newname = re.sub(r'[^a-zA-Z0-9]', '', newname)

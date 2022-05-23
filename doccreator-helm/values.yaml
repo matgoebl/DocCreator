@@ -93,14 +93,16 @@ affinity: {}
 #  user: "pass"
 
 env:
-  GITREPOPATH: work
+  GITREPOPATH: "work"
   GITREPOURL: "ssh://user@host:22/data/repo.git"
-  COMMONDIR: TEST
+  COMMONDIR: "TEST"
   BRANCHPREFIX: "doccreator"
+  NAMEPREFIX: ""
   TEMPLATE: "template.json"
   FIELDS: "Name;Details.Location;Details.Type"
   GIT_AUTHOR_NAME: "John Doe"
   GIT_AUTHOR_EMAIL: "john.doe@example.com"
   GIT_COMMITTER_NAME: "John Doe"
   GIT_COMMITTER_EMAIL: "john.doe@example.com"
-  GIT_SSH_COMMAND: ssh -o StrictHostKeyChecking=no
+  GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
+  VERBOSE: "2"
